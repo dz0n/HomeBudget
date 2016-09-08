@@ -17,6 +17,7 @@ Used frameworks and technologies:
 - Mockito
 - Maven
 - Thymeleaf
+- Bootstrap
 - HTML5, CSS
 - Javascript
 - REST, JSON
