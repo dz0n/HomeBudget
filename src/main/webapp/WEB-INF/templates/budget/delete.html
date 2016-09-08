@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a th:href="@{/budget}">Budżet</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container cont bg-1 shadow-1">
+		<div th:replace="fragments/msg :: msg">messages</div>
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<strong class="font-size-1-5">Budżet <span th:text="${budget.name}"></span></strong>
+				<a th:href="@{/budget/edit/{id}(id=${budget.hiddenId})}" class="glyph"><span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="edytuj"></span></a>
+				<a th:href="@{/budget/delete/{id}(id=${budget.hiddenId})}" class="glyph"><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="usuń"></span></a>
+			</div>
+			<div class="panel-body">
+				<div th:text="${budget.description}"></div>
+			</div>
+		</div>
+		
+		<div class="alert alert-danger">
+			<h4>Uwaga!</h4>
+			<strong>Usuniesz całą zawartość budżetu! Operacja jest nieodwracalna!</strong>
+			Liczba obiektów, które będą usunięte:
+			<ul style="list-style-type:none">
+				<li>Kategorie: <span th:text="${categoriesCounter}"></span></li>
+				<li>Konta: <span th:text="${accountsCounter}"></span></li>
+				<li>Wpływy/wydatki: <span th:text="${receiptsCounter}"></span></li>
+			</ul>
+		</div>
+		<a th:href="@{/budget/delete/{id}/confirm(id=${budget.hiddenId})}">
+			<button type="button" class="btn btn-default">Usuń</button>
+		</a>
+		<a th:href="@{/budget/{id}(id=${budget.hiddenId})}">
+			<button type="button" class="btn btn-default">Anuluj</button>
+		</a>
+	</div>
+</body>
+</html>

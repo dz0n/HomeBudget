@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a th:href="@{/budget}">Budżet</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="container cont bg-1 shadow-1">
+		<div th:replace="fragments/msg :: msg">messages</div>		
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<strong class="font-size-1-5">Podkategoria <span th:text="${subcategory.name}"></span></strong>
+				<a th:href="@{/subcategory/edit/{id}(id=${subcategory.hiddenId})}" class="glyph"><span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="edytuj"></span></a>
+				<a th:href="@{/subcategory/delete/{id}(id=${subcategory.hiddenId})}" class="glyph"><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="usuń"></span></a>
+			</div>
+			<div class="panel-body">
+				<div th:text="${subcategory.description}"></div>
+			</div>
+			<div class="panel-footer">
+				budżet: <strong><a th:href="@{/budgets/{id}(id=${subcategory.category.budget.hiddenId})}" class="quickmenu" th:text="${subcategory.category.budget.name}"></a></strong>
+				kategoria: <strong><a th:href="@{/category/{id}(id=${subcategory.category.hiddenId})}" class="quickmenu" th:text="${subcategory.category.name}"></a></strong>
+			</div>
+		</div>
+		
+		<div class="alert alert-danger">
+			Potwierdź usunięcie podkategorii <span th:text="${subcategory.name}">nazwa podkategorii</span>
+		</div>
+		<a th:href="@{/subcategory/delete/{id}/confirm(id=${subcategory.hiddenId})}">
+			<button type="button" class="btn btn-default">Usuń</button>
+		</a>
+		<a th:href="@{/subcategory/{id}(id=${subcategory.hiddenId})}">
+			<button type="button" class="btn btn-default">Anuluj</button>
+		</a>
+	</div>
+</body>
+</html>

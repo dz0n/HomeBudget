@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a th:href="@{/budget}">Budżet</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="container main-cont shadow-1">
+		<div class="main-part bg-2 text-center">
+			<h2>Witaj w HomeBudget</h2>
+			<h3>Stronie, która odmieni zarządzanie Twoim domowym budżetem</h3>
+		</div>
+		
+		<div class="main-part bg-1 text-center">
+			<div id="myCarousel" class="carousel slide" data-ride="carousel">
+				<ol class="carousel-indicators">
+					<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+					<li data-target="#myCarousel" data-slide-to="1"></li>
+					<li data-target="#myCarousel" data-slide-to="2"></li>
+					<li data-target="#myCarousel" data-slide-to="3"></li>
+				</ol>
+				
+				<div class="carousel-inner" role="listbox">
+					<div class="item active">
+						<img th:src="@{/img/budget.png}" alt="budżet" />
+						<div class="carousel-caption">
+							<p><strong>Stwórz wirtualne kategorie wspomagające zarządzanie osobistym budżetem oraz listę prawdziwych kont i stanu gotówki aby mieć wszystko w jednym miejscu.</strong></p>
+						</div>
+					</div>
+					
+					<div class="item">
+						<img th:src="@{/img/receiptBig.png}" alt="wpływ/wydatek" />
+						<div class="carousel-caption">
+							<p><strong>Dodawaj na bieżąco swoje wydatki - przez komputer lub telefon. Przyporządkowuj je do odpowiedniej kategorii i podkategorii.</strong></p>
+						</div>
+					</div>
+					
+					<div class="item">
+						<img th:src="@{/img/chartBalance.png}" alt="wykres" />
+						<div class="carousel-caption">
+							<p><strong>Analizuj historię swoich przychodów i kosztów, miesięczne salda, strukturę wydatków.</strong></p>
+						</div>
+					</div>
+					
+					<div class="item">
+						<img th:src="@{/img/budgetAccess.png}" alt="dostęp" />
+						<div class="carousel-caption">
+							<p><strong>Udostępnij swój budżet - np. partnerowi - aby wspólnie zarządzać budżetem domowym.</strong></p>
+						</div>
+					</div>
+				</div>
+				
+				<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Poprzedni</span>
+				</a>
+				<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Następny</span>
+				</a>
+			</div>
+		</div>
+		
+		<div class="main-part bg-2 text-center">
+			<h2>Słowniczek</h2>
+			<div class="row">
+				<p class="col-sm-9 padd-sm font-size-1-25 text-left"><strong>Budżet:</strong> Zespół kont i kategorii, w którym rejestrujesz swoje wpływy i wydatki. Możesz mieć wiele budżetów oraz nadawać uprawnienia do budżetów innym użytkownikom.</p>
+			</div>
+			<div class="row">
+				<p class="col-sm-offset-3 col-sm-9 padd-sm font-size-1-25 text-left"><strong>Kategoria:</strong> Wirtualna "koperta" pozwalająca podzielić środki na określone cele. Pozwalają na planowanie swoich wydatków, oszczędności, kontrolowanie ich poziomów, w szczególności jeśli korzystamy z różnych form płatności - gotówki, karty debetowej, kredytowej.</p>
+			</div>
+			<div class="row">
+				<p class="col-sm-9 padd-sm padd-sm font-size-1-25 text-left"><strong>Podkategoria:</strong> Kategorie można podzielić na podkategorie, aby bardziej szczegółowo określić wydatki. Podkategorie nie mają wartości - łączną wartość wszystkich podkategorii przechowuje nadrzędna kategoria.</p>
+			</div>
+			<div class="row">
+				<p class="col-sm-offset-3 col-sm-9 padd-sm font-size-1-25 text-left"><strong>Konto:</strong> Odpowiednik prawdziwego konta bankowego czy gotówki w portfelu. Podczas gdy kategoria jest bytem wirtualnym, pewną abstrakcją ułatawiająca zarządzanie finansami, konta odzwierciedlają rzeczywiste stany posiadania, pozwalając w jednym miejscu zebrać je wszystkie.</p>
+			</div>
+			<div class="row">
+				<p class="col-sm-9 padd-sm font-size-1-25 text-left"><strong>Wpływy, wydatki:</strong> Dodawaj wpływy (np. wynagrodzenie) lub wydatki (np. zakupy), nazwij i wybierz odpowiednią kategorię, podkategorię i konto. Pod dodaniu wpływu lub wydatku wartość kategorii i konta zostanie zmieniona o podaną kwotę.</p>
+			</div>
+			<div class="row">
+				<p class="col-sm-offset-3 col-sm-9 padd-sm font-size-1-25 text-left"><strong>Przelewy:</strong> Możesz dokonywać przelewów między kontami odzwierciedlające faktyczne wydarzenia na nich, np. wypłacając gotówkę z bankomatu, przelewając środki na lokatę. Możesz również przelewać kwoty pomiędzy kategoriami, np. przeznaczając dodatkowe środki na oszczędności.</p>
+			</div>
+		</div>
+		
+		<div class="main-part bg-1 text-center">
+			<h2 class="padding-lg-b">Zobacz przykładowe konto z uzupełnionym budżetem</h2>
+			<div class="padding-lg-b">
+				<form class="form-inline" role="form" method="POST" name="f" th:action="@{/login}">
+					<div class="form-group">
+						<label for="username">Nazwa użytkownika</label>
+						<input type="text" class="form-control" name="username" id="username" value="userdemo" size="30" required="required" />
+					</div>
+					<div class="form-group">
+						<label for="password">Hasło:</label>
+						<input type="password" class="form-control" name="password" id="password" value="Qwerty123" size="30" required="required" />
+					</div>
+					<button type="submit" class="btn btn-default">Zaloguj się</button>
+				</form>
+			</div>
+		</div>
+		
+		<div class="main-part bg-2 text-center">
+			<blockquote class="blockquote-reverse">
+				<p>Kupujemy rzeczy, których nie potrzebujemy<br />
+					Za pieniądze, których nie mamy<br />
+					Żeby zaimponować ludziom, których nie lubimy</p>
+				<footer>Dave Ramsey</footer>
+			</blockquote>
+		</div>
+	</div>
+</body>
+</html>

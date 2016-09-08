@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" href="../../css/bootstrap.min.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script th:src="@{js/bootstrap.min.js}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="../../css/style.css" />
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:fragment="menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" th:href="@{/home}">Home<strong>Budget</strong></a>
+			</div>
+			
+			<div sec:authorize="isAuthenticated()">
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" th:href="@{/receipt}">Dodaj<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li id="menuReceipt"><a th:href="@{/receipt}">wpływ/wydatek</a></li>
+								<li id="menuTransferAccount"><a th:href="@{/transfer/account}">przelew między kontami</a></li>
+								<li id="menuTransferCategory"><a th:href="@{/transfer/category}">przelew między kategoriami</a></li>
+							</ul>
+						</li>
+						<li id="menuAnalysis"><a th:href="@{/analysis/monthlybalance}">Analiza budżetu</a></li>
+						<li id="menuHistory"><a th:href="@{/budget/history}">Historia</a></li>
+						<li id="menuBudget"><a th:href="@{/budget}">Budżet</a></li>
+						<li id="menuBudgets"><a th:href="@{/budgets}">Zmień budżet</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div sec:authorize="isAnonymous()">
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<form class="navbar-form navbar-left" method="POST" th:action="@{/login}">
+						<div class="form-group">
+							<input type="text" class="form-control" 
+									name="username" id="username"
+									required="required" placeholder="nazwa użytkownika"
+									autofocus="autofocus" />
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control"
+									name="password" id="password"
+									required="required" placeholder="nazwa użytkownika" />
+						</div>
+						<div class="checkbox">
+							<input type="checkbox" name="remember-me" id="remember_me">
+						</div>
+						<button type="submit" class="btn btn-default">Zaloguj się</button>
+					</form>
+					
+					<ul class="nav navbar-nav navbar-right">
+						<li id="menuLogin"><a th:href="@{/login}">Logowanie</a></li>
+						<li id="menuRegister"><a th:href="@{/register}">Rejestracja</a></li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+	</nav>
+	<div class="container cont bg-1 shadow-1">
+		bla bla
+	</div>
+</body>
+</html>

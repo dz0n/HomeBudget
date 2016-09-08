@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head :: head (title ='logowanie')">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a th:href="@{/budget}">Budżet</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="container cont bg-1 shadow-1 text-center">
+		<form class="col-sm-offset-3 col-sm-6" role="form" method="POST" name="f" th:action="@{/login}">
+			<div th:if="${param.error != null}" >
+				<div class="alert alert-warning">
+					Niepoprawny login lub hasło.
+				</div>
+			</div>
+			<div th:if="${param.logout != null}" >
+				<div class="alert alert-info">
+					Zostałeś wylogowany.
+				</div>
+			</div>
+			<div th:text="${param.error}"></div>
+			<div class="form-group">
+				<label for="username">Nazwa użytkownika</label>
+				<input type="text" class="form-control" name="username" id="username" value="" size="30" required="required" autofocus="autofocus" />
+			</div>
+			<div class="form-group">
+				<label for="password">Hasło:</label>
+				<input type="password" class="form-control" name="password" id="password" value="" size="30" required="required" />
+			</div>
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="remember-me" id="remember_me">
+					Pamiętaj mnie
+				</label>
+			</div>
+			<button type="submit" class="btn btn-default">Zaloguj się</button>
+			<a th:href="@{/register}" >
+				<button type="button" class="btn btn-default">Załóż konto</button>
+			</a>
+		</form>
+	</div>
+	<script type="text/javascript">
+    /*<![CDATA[*/
+	function setActiveMenu() {
+		document.getElementById("menuLogin").className = "active";
+    }
+    
+	$(document).ready(function(){
+    	setActiveMenu();
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

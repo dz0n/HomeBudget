@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			
+			<div sec:authorize="isAuthenticated()">
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/budget}">Budżet</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div sec:authorize="isAnonymous()">
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/login}">Logowanie</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/register}">Rejestracja</a></li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+	</nav>
+	
+	<div class="container cont bg-1 shadow-1">
+		<div th:replace="fragments/msg :: msg">messages</div>		
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<strong class="font-size-1-5">Kategoria <span th:text="${category.name}" data-toggle="tooltip" data-placement="bottom" th:title="${category.description}"></span></strong>
+				<a th:href="@{/category/edit/{id}(id=${category.hiddenId})}" class="glyph"
+						sec:authorize="hasPermission(#vars.category.budget, 2)">
+					<span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="edytuj"></span>
+				</a>
+				<a th:href="@{/category/delete/{id}(id=${category.hiddenId})}" class="glyph"
+						sec:authorize="hasPermission(#vars.category.budget, 2)">
+					<span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="usuń"></span>
+				</a>
+			</div>
+			<div class="panel-body">
+				<p>Wartość kategorii: <span th:text="${#numbers.formatDecimal(category.value, 1, 'DEFAULT', 2, 'DEFAULT')}"></span> zł</p>
+				<p>Bilans bieżącego miesiąca: <span th:text="${#numbers.formatDecimal(monthBalance, 1, 'DEFAULT', 2, 'DEFAULT')}"></span> zł</p>
+			</div>
+			<div class="panel-footer">
+				budżet: <strong><a th:href="@{/budgets/{id}(id=${category.budget.hiddenId})}" class="quickmenu" th:text="${category.budget.name}"></a></strong>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="list-group">
+					<p class="list-group-item active font-size-1-25"><strong>Podkategorie:</strong></p>
+					<a th:href="@{/subcategory/{id}(id=${subcategory.hiddenId})}" class="list-group-item" th:each="subcategory : ${subcategories}">
+						<p class="list-group-item-heading font-size-1-2">
+							<strong><span th:text="${subcategory.name}">Nazwa</span></strong>
+						</p>
+						<p class="list-group-item-text" th:text="${subcategory.description}">Opis</p>
+					</a>
+					<a th:href="@{/subcategory/new/{id}(id=${category.hiddenId})}" class="list-group-item">
+						<p class="list-group-item-text">dodaj podkategorię</p>
+					</a>
+				</div>
+			</div>
+			
+			<div class="col-sm-6">
+				<div class="list-group">
+					<a th:href="@{/category/history/{id}/0/30(id=${category.hiddenId})}" class="list-group-item active font-size-1-25 whiteheader" data-toggle="tooltip" data-placement="bottom" title="zobacz historię"><strong>Ostatnie wpływy i wydatki</strong></a>
+					<a th:href="@{/receipt/edit/{id}(id=${receipt.hiddenId})}" class="list-group-item" th:each="receipt : ${receipts}">
+						<p th:replace="fragments/receiptList :: list">
+							(lista ostatnich wpływów/wydatków)
+						</p>
+					</a>
+					<a th:href="@{/receipt}" class="list-group-item">
+						<p class="list-group-item-text">dodaj</p>
+					</a>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+	<script>
+	$(document).ready(function(){
+	    $('[data-toggle="tooltip"]').tooltip();
+	});
+	</script>
+</body>
+</html>

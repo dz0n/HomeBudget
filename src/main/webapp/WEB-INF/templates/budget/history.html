@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			
+			<div sec:authorize="isAuthenticated()">
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/budget}">Budżet</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div sec:authorize="isAnonymous()">
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/login}">Logowanie</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/register}">Rejestracja</a></li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+	</nav>
+	
+	<div class="container cont bg-1 shadow-1">
+		<div th:replace="fragments/msg :: msg">messages</div>
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<strong class="font-size-1-5">Budżet <a th:href="@{/budgets/{id}(id=${budget.hiddenId})}" class="whiteheader"><span th:text="${budget.name}"></span></a></strong>
+				<a th:href="@{/budget/edit/{id}(id=${budget.hiddenId})}" class="glyph"><span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="edytuj"></span></a>
+				<a th:href="@{/budget/delete/{id}(id=${budget.hiddenId})}" class="glyph"><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="usuń"></span></a>
+			</div>
+			<div class="panel-body">
+				<div th:text="${budget.description}"></div>
+			</div>
+		</div>
+		
+		<div>
+			<p class="margin-around-sm">
+				liczba wpisów na jednej stronie: 
+				<a th:href="@{/budget/history/{id}/0/10(id=${budget.hiddenId})}" class="quickmenu">10</a> |  
+				<a th:href="@{/budget/history/{id}/0/30(id=${budget.hiddenId})}" class="quickmenu">30</a> | 
+				<a th:href="@{/budget/history/{id}/0/50(id=${budget.hiddenId})}" class="quickmenu">50</a>
+			</p>
+			<div class="list-group">
+				<p class="list-group-item active font-size-1-25"><strong>Historia</strong></p>
+				<a th:href="@{/receipt/edit/{id}(id=${receipt.hiddenId})}" class="list-group-item" th:each="receipt : ${receipts}">
+					<p th:replace="fragments/receiptList :: list">
+						(lista ostatnich wpływów/wydatków)
+					</p>
+				</a>
+			</div>
+			<ul class="pagination">
+				<li th:each="index : ${#numbers.sequence(0, pagesCount-1)}" th:classappend="${index*max == start} ? active">
+					<a th:if="${index*max != start}" th:href="@{/budget/history/{id}/{start}/{max}(id=${budget.hiddenId}, start=${index*max}, max=${max})}" th:text="${index+1}">1</a>
+					<span th:if="${index*max == start}" th:text="${index+1}">1</span>
+				</li>
+			</ul>
+		</div>
+		
+	</div>
+	
+	<script>
+	$(document).ready(function(){
+	    $('[data-toggle="tooltip"]').tooltip();
+	});
+	</script>
+	
+	<script type="text/javascript">
+    /*<![CDATA[*/
+	function setActiveMenu() {
+		document.getElementById("menuHistory").className = "active";
+    }
+    
+	$(document).ready(function(){
+    	setActiveMenu();
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

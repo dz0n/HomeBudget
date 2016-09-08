@@ -1,0 +1,7 @@
+					<p th:fragment="list" class="list-group-item-text font-size-1-1">
+						<span th:text="${#dates.format(receipt.date, 'YYYY-MM-dd')}"></span>,
+						<strong><span th:text="${#numbers.formatDecimal(receipt.value, 1, 'DEFAULT', 2, 'DEFAULT')}">15,00 zł</span> zł</strong>,
+						<span th:text="${receipt.name}">nazwa</span><span th:if="${receipt.description != '' && receipt.description != ' '}" th:text="','"></span>
+						<span th:text="${receipt.description}">opis</span>
+						<span th:if="${receipt.user!=null}">(użytkownik: <span th:text="${receipt.user.username}">username</span>)</span>
+					</p>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a th:href="@{/budget}">Budżet</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="container cont bg-1 shadow-1">
+		<div th:replace="fragments/msg :: msg">messages</div>
+		
+		<div class="list-group">
+			<p class="list-group-item active font-size-1-25"><strong>Wybierz budżet</strong></p>
+			<a th:href="@{/budgets/{id}(id=${budget.hiddenId})}" class="list-group-item" th:each="budget : ${budgets}">
+				<p class="list-group-item-heading font-size-1-1">
+					<strong><span th:text="${budget.name}">Nazwa</span></strong>
+					<span th:if="${accessLevels.containsKey(budget.hiddenId)}">
+						(właściciel: <span th:text="${budget.user.username}">username</span>, dostęp: <span th:text="${accessLevels.get(budget.hiddenId).toString()}">none</span>)
+					</span>
+				</p>
+				<p class="list-group-item-text" th:text="${budget.description}">Opis</p>
+			</a>
+			<a th:href="@{/budget/new}" class="list-group-item">
+				<span class="list-group-item-text">nowy budżet</span>
+			</a>
+		</div>
+		
+	</div>
+	
+	<script type="text/javascript">
+    /*<![CDATA[*/
+	function setActiveMenu() {
+		document.getElementById("menuBudgets").className = "active";
+    }
+    
+	$(document).ready(function(){
+    	setActiveMenu();
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

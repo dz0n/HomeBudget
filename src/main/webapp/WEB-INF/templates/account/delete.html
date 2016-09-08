@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a th:href="@{/budget}">Budżet</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	<div class="container cont bg-1 shadow-1">
+		<div th:replace="fragments/msg :: msg">messages</div>		
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<strong class="font-size-1-5">Konto <span th:text="${account.name}" data-toggle="tooltip" data-placement="bottom" th:title="${account.description}"></span></strong>
+				<a th:href="@{/account/edit/{id}(id=${account.hiddenId})}" class="glyph"><span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="edytuj"></span></a>
+			</div>
+			<div class="panel-body">
+				<span th:text="${#numbers.formatDecimal(account.value, 1, 'DEFAULT', 2, 'DEFAULT')}"></span> zł
+			</div>
+			<div class="panel-footer">
+				budżet: <strong><a th:href="@{/budgets/{id}(id=${account.budget.hiddenId})}" class="quickmenu" th:text="${account.budget.name}"></a></strong>
+			</div>
+		</div>
+		
+		<a th:href="@{/account/delete/{id}/confirm(id=${account.hiddenId})}">
+			<button type="button" class="btn btn-default">Usuń</button>
+		</a>
+		<a th:href="@{/account/{id}(id=${account.hiddenId})}">
+			<button type="button" class="btn btn-default">Anuluj</button>
+		</a>
+	</div>
+</body>
+</html>

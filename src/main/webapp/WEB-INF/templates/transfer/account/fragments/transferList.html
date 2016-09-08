@@ -1,0 +1,9 @@
+						<p th:fragment="list" class="list-group-item-text font-size-1-1">
+							<span th:text="${#dates.format(transfer.date, 'YYYY-MM-dd')}"></span>,
+							<strong><span th:text="${#numbers.formatDecimal(transfer.value, 1, 'DEFAULT', 2, 'DEFAULT')}">15,00</span> zł,</strong>
+							<span th:if="${transfer.name != '' && transfer.name != ' '}" th:text="${transfer.name + ','}">nazwa</span>
+							<span th:if="${transfer.description != '' && transfer.description != ' '}" th:text="${transfer.description + ','}">opis</span>
+							<span th:text="${'z: ' + transfer.fromAccount.name}">opis</span>,
+							<span th:text="${'do: ' + transfer.toAccount.name}">opis</span>
+							<span th:if="${transfer.user!=null}">(użytkownik: <span th:text="${transfer.user.username}">username</span>)</span>
+						</p>
