@@ -1,11 +1,11 @@
 # HomeBudget
-Personal and household budgeting application. See all your earnings and expenses in one place.
+Personal and household budgeting application. See all your earnings and expenses in one place.  
 
-Deployment:
-https://hb-dzon.rhcloud.com
-Demo account:
-Login: userdemo
-Password: Qwerty123
+Deployment:  
+https://hb-dzon.rhcloud.com  
+Demo account:  
+Login: userdemo  
+Password: Qwerty123  
 
 
 Used frameworks and technologies:
