@@ -7,6 +7,7 @@ Demo account:
 Login: userdemo
 Password: Qwerty123
 
+
 Used frameworks and technologies:
 - Spring (modules: Core, Web, Data Access [JDBC templates, ORM], AOP, Test)
 - Spring Security
