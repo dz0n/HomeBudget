@@ -2,7 +2,7 @@
 Personal and household budgeting application. See all your earnings and expenses in one place.
 
 Deployment:
-[hb]https://hb-dzon.rhcloud.com[]
+https://hb-dzon.rhcloud.com
 Demo account:
 Login: userdemo
 Password: Qwerty123
@@ -18,6 +18,3 @@ Used frameworks and technologies:
 - HTML5, CSS
 - Javascript
 - REST, JSON
-
-
-[hb]: https://hb-dzon.rhcloud.com
