@@ -120,7 +120,7 @@ public class BudgetCalculationService {
 		LocalDate endDate = new LocalDate(endMonthDate);
 		int monthsBetween = Months.monthsBetween(startDate.withDayOfMonth(1), endDate.withDayOfMonth(1)).getMonths() + 1;
 		
-		return this.getLastMonthsBalance(budget, endMonthDate, monthsBetween);
+		return this.getLastMonthsBudgetValues(budget, endMonthDate, monthsBetween);
 	}
 	
 	private BigDecimal getSumOfAccounts(Budget budget) {
@@ -132,4 +132,61 @@ public class BudgetCalculationService {
 		return accountsValue;
 	}
 	
+	public BigDecimal getExpensesSum(Budget budget, Date date) {
+		BigDecimal value = budgetCalculationRepository.getExpensesSum(budget, date);
+		if(value==null) {
+			return BigDecimal.valueOf(0);
+		}
+		return value;
+	}
+	
+	public List<MonthValue> getExpensesByMonths(Budget budget, Date endMonthDate) {
+		Date firstReceiptDate = receiptService.getFirstReceiptDate(budget);
+		LocalDate startDate = new LocalDate(firstReceiptDate);
+		LocalDate endDate = new LocalDate(endMonthDate);
+		int monthsBetween = Months.monthsBetween(startDate.withDayOfMonth(1), endDate.withDayOfMonth(1)).getMonths() + 1;
+		
+		return this.getExpensesByMonths(budget, endMonthDate, monthsBetween);
+	}
+	
+	public List<MonthValue> getExpensesByMonths(Budget budget, Date endMonthDate, int months) {
+		List<MonthValue> monthsValues = new ArrayList<MonthValue>();
+		for(DateTime month : getLastMonths(new DateTime(endMonthDate), months)) {
+			MonthValue monthValue = new MonthValue(
+					month.getYear() + "-" + String.format("%02d", month.getMonthOfYear()), 
+					this.getExpensesSum(budget, month.toDate())
+					);
+			monthsValues.add(monthValue);
+		}
+		return monthsValues;
+	}
+	
+	public BigDecimal getIncomeSum(Budget budget, Date date) {
+		BigDecimal value = budgetCalculationRepository.getIncomeSum(budget, date);
+		if(value==null) {
+			return BigDecimal.valueOf(0);
+		}
+		return value;
+	}
+	
+	public List<MonthValue> getIncomeByMonths(Budget budget, Date endMonthDate) {
+		Date firstReceiptDate = receiptService.getFirstReceiptDate(budget);
+		LocalDate startDate = new LocalDate(firstReceiptDate);
+		LocalDate endDate = new LocalDate(endMonthDate);
+		int monthsBetween = Months.monthsBetween(startDate.withDayOfMonth(1), endDate.withDayOfMonth(1)).getMonths() + 1;
+		
+		return this.getIncomeByMonths(budget, endMonthDate, monthsBetween);
+	}
+	
+	public List<MonthValue> getIncomeByMonths(Budget budget, Date endMonthDate, int months) {
+		List<MonthValue> monthsValues = new ArrayList<MonthValue>();
+		for(DateTime month : getLastMonths(new DateTime(endMonthDate), months)) {
+			MonthValue monthValue = new MonthValue(
+					month.getYear() + "-" + String.format("%02d", month.getMonthOfYear()), 
+					this.getIncomeSum(budget, month.toDate())
+					);
+			monthsValues.add(monthValue);
+		}
+		return monthsValues;
+	}
 }

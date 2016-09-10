@@ -49,4 +49,28 @@ public class ChartsDataRestController {
 		Budget budget = activeBudgetService.get();
 		return budgetCalculationService.getLastMonthsBudgetValues(budget, new Date(), months);
 	}
+	
+	@RequestMapping("/expenses")
+	public List<MonthValue> monthlyExpenses() {
+		Budget budget = activeBudgetService.get();
+		return budgetCalculationService.getExpensesByMonths(budget, new Date());
+	}
+	
+	@RequestMapping("/expenses/{months}")
+	public List<MonthValue> customizedMonthlyExpenses(@PathVariable int months) {
+		Budget budget = activeBudgetService.get();
+		return budgetCalculationService.getExpensesByMonths(budget, new Date(), months);
+	}
+	
+	@RequestMapping("/income")
+	public List<MonthValue> monthlyIncome() {
+		Budget budget = activeBudgetService.get();
+		return budgetCalculationService.getIncomeByMonths(budget, new Date());
+	}
+	
+	@RequestMapping("/income/{months}")
+	public List<MonthValue> customizedMonthlyIncome(@PathVariable int months) {
+		Budget budget = activeBudgetService.get();
+		return budgetCalculationService.getIncomeByMonths(budget, new Date(), months);
+	}
 }

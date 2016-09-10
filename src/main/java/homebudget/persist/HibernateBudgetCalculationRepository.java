@@ -47,6 +47,23 @@ public class HibernateBudgetCalculationRepository implements BudgetCalculationRe
 															+ "WHERE s.category=:category "
 															+ "AND month(date)=:month "
 															+ "AND year(date)=:year";
+	private final static String SELECT_BUDGET_EXPENSES_SUM = "SELECT sum(r.value) "
+															+ "FROM receipt AS r "
+															+ "JOIN account AS a "
+															+ "ON r.account = a.id "
+															+ "WHERE a.budget=:budget "
+															+ "AND month(date)=:month "
+															+ "AND year(date)=:year "
+															+ "AND r.value < 0";
+	private final static String SELECT_BUDGET_INCOME_SUM = "SELECT sum(r.value) "
+															+ "FROM receipt AS r "
+															+ "JOIN account AS a "
+															+ "ON r.account = a.id "
+															+ "WHERE a.budget=:budget "
+															+ "AND month(date)=:month "
+															+ "AND year(date)=:year "
+															+ "AND r.value > 0";
+	
 	private final SessionFactory sessionFactory;
 	
 	@Autowired
@@ -93,7 +110,7 @@ public class HibernateBudgetCalculationRepository implements BudgetCalculationRe
 		query.setParameter("year", localDate.getYear());
 		return query;
 	}
-
+	
 	private BigDecimal getSum(Query query) {
 		@SuppressWarnings("rawtypes")
 		List sumList = query.list();
@@ -109,6 +126,22 @@ public class HibernateBudgetCalculationRepository implements BudgetCalculationRe
 
 	private Session getCurrentSession() {
 		return sessionFactory.getCurrentSession();
+	}
+
+	@Override
+	@PreAuthorize("hasPermission(#budget, 1)")
+	public BigDecimal getExpensesSum(Budget budget, Date date) {
+		Query query = getPreparedSumSQLQuery(SELECT_BUDGET_EXPENSES_SUM, date);
+		query.setParameter("budget", budget.getId());
+		return getSum(query);
+	}
+
+	@Override
+	@PreAuthorize("hasPermission(#budget, 1)")
+	public BigDecimal getIncomeSum(Budget budget, Date date) {
+		Query query = getPreparedSumSQLQuery(SELECT_BUDGET_INCOME_SUM, date);
+		query.setParameter("budget", budget.getId());
+		return getSum(query);
 	}
 	
 }

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			
+			<div sec:authorize="isAuthenticated()">
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/budget}">Budżet</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			<div sec:authorize="isAnonymous()">
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/login}">Logowanie</a></li>
+					</ul>
+					<ul class="nav navbar-nav">
+						<li><a th:href="@{/register}">Rejestracja</a></li>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+	</nav>
+	
+	<div class="container cont bg-1 shadow-1">
+		<ul th:replace="analysis/fragments/menuMonthly :: menu">
+		</ul>
+		
+		<div th:replace="fragments/msg :: msg">messages</div>
+		
+		<div id="chart_div" class="chart"></div>
+		
+		<div>Dashboard w budowie...</div>
+	</div>
+	
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+	google.charts.load('current', {packages: ['corechart', 'bar'], 'language': 'pl'});
+    google.charts.setOnLoadCallback(drawAndAjax);
+    
+    var jsondata = null;
+    
+    function drawAndAjax() {
+    	$.ajax({
+			url: "../data/charts/monthly/expenses",
+			dataType: "JSON",
+			success: function(data) {
+				jsondata = data;
+				drawChart();
+			}
+		});
+    }
+    
+    function drawChart() {
+    	if(jsondata==null) return;
+    	
+    	var data = new google.visualization.DataTable();
+    	
+    	data.addColumn('string', 'Miesiąc');
+        data.addColumn('number', 'Saldo');
+    	
+        var dataArray = [];
+        $.each(jsondata, function (i, obj) {
+        	dataArray.push([obj.month, obj.value]);
+        });
+        
+        data.addRows(dataArray);
+        
+		var options = {'title':'Suma wydatków',
+						'titlePosition': 'none',
+						'chartArea': {'width': '90%', 'height': '85%'},
+						'bar': {groupWidth: '80%'},
+						'legend': { position: 'none' },
+						'backgroundColor': { fill:'transparent' }};
+
+		var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+		chart.draw(data, options);
+	}
+    
+    $(window).resize(function(){
+		drawChart();
+	});
+	
+    
+	function setActiveSubMenu() {
+		document.getElementById("chartmenu3").className = "active";
+    }
+    
+    function setActiveMenu() {
+		document.getElementById("menuAnalysis").className = "active";
+    }
+    
+	$(document).ready(function(){
+		setActiveSubMenu();
+		setActiveMenu();
+	});
+	/*]]>*/
+	</script>
+</body>
+</html>

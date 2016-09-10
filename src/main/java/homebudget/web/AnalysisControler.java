@@ -18,4 +18,14 @@ public class AnalysisControler {
 	public String monthlyBudgets(Model model) {
 		return "analysis/monthly/budget";
 	}
+	
+	@RequestMapping(value="/monthlyexpenses", method=GET)
+	public String monthlyExpenses(Model model) {
+		return "analysis/monthly/expenses";
+	}
+	
+	@RequestMapping(value="/monthlyincome", method=GET)
+	public String monthlyIncome(Model model) {
+		return "analysis/monthly/income";
+	}
 }

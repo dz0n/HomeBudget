@@ -17,5 +17,8 @@ public interface BudgetCalculationRepository {
 	public BigDecimal getMonthBalance(Category category, Date date);
 	
 	public BigDecimal getMonthBalance(Subcategory subcategory, Date date);
-
+	
+	public BigDecimal getExpensesSum(Budget budget, Date date);
+	
+	public BigDecimal getIncomeSum(Budget budget, Date date);
 }
