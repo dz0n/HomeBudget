@@ -1,5 +1,5 @@
 # HomeBudget
-Personal and household budgeting application. All your earnings and expenses in one place, wherever you are.
+Personal and household budgeting application. All your earnings and expenses under control, in one place and wherever you are.
 
 Used frameworks and technologies:
 - Spring (modules: Core, Web, Data Access [JDBC templates, ORM], AOP, Test)
