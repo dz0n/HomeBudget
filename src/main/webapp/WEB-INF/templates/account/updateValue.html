@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="fragments/head :: head (null)">
+	<title>HomeBudget</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="../../../css/style.css" />
+	<link rel="stylesheet" type="text/css" th:href="@{/css/chart-responsive.css}" href="../../../css/chart-responsive.css" />
+	
+	<link rel="stylesheet" th:href="@{/css/bootstrap-datepicker3.min.css}" href="../../../css/bootstrap-datepicker3.min.css" />
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script th:src="@{/js/bootstrap-datepicker.min.js}" src="../../../js/bootstrap-datepicker.min.js"></script>
+	<script th:src="@{/js/locales/bootstrap-datepicker.pl.min.js}" src="../../../js/locales/bootstrap-datepicker.pl.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" th:replace="fragments/menu :: menu">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">HomeBudget</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a th:href="@{/budget}">Budżet</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a th:href="@{/logout}" href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container cont bg-1 shadow-1">
+		<div th:replace="fragments/msg :: msg">messages</div>		
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<strong class="font-size-1-5">Aktualizacja kont</strong>
+			</div>
+			<div class="panel-footer">
+				budżet: <strong><a th:href="@{/budgets/{id}(id=${budget.hiddenId})}" class="quickmenu" th:text="${budget.name}"></a></strong>
+				<a th:href="@{/budgets}" class="quickmenu">(zmień)</a>
+			</div>
+		</div>
+		
+		<form class="form-horizontal" role="form" method="POST" >
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="categoryId">Kategoria obciążona wyrównaniem</label>
+				<div class="col-sm-4">
+					<select name="categoryId" class="form-control" id="categoryId" onchange="subcategories()">
+						<option th:each="category : ${categories}" th:value="${category.hiddenId}" th:text="${category.name}">nazwa konta</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="subcategoryId">Podkategoria obciążona wyrównaniem</label>
+				<div class="col-sm-4">
+					<select name="subcategoryId" class="form-control" id="subcategoryId">
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group" th:each="account : ${accounts}">
+				<input type="hidden" th:name="${'accountId'+account.hiddenId}" th:value="${account.hiddenId}">
+				<label class="control-label col-sm-3" th:text="${account.name}">konto abc</label>
+				<div class="col-sm-4">
+					<input type="number" step="0.01" class="form-control" th:id="${'value'+account.hiddenId}" th:name="${'value'+account.hiddenId}" th:value="${account.value}" size="20" required="required" />
+				</div>
+				<div class="col-sm-4">
+					<span class="control-label" th:text="${'aktualna wartość: '+account.value}">aktualna wartość: 1254,52</span>
+				</div>
+			</div>
+			
+			<div class="col-sm-10 text-center">
+				<button type="submit" class="btn btn-default">Aktualizuj</button>
+			</div>
+		</form>
+		
+	</div>
+	
+	<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function(){
+    	subcategories();
+    	setDefaultFields();
+    	setActiveMenu();
+	    $('[data-toggle="tooltip"]').tooltip();
+	});
+    
+	function setActiveMenu() {
+		document.getElementById("menuAccountsUpdate").className = "active";
+    }
+	//TODO USUNAC? przerobic i zostawic subcategory
+    function setDefaultFields() {
+    	$.ajax({
+    		url: "./default/account/" + [[${budget.hiddenId}]],
+			dataType: "JSON",
+			success: function(data) {
+				var accountId = data[0].id;
+		    	$('#accountId option[value=' + accountId + ']').attr('selected','selected');
+			}
+		});
+    	
+    	$.ajax({
+    		url: "./default/subcategory/" + [[${budget.hiddenId}]],
+			dataType: "JSON",
+			success: function(data) {
+				var categoryId;
+		    	for(i = 0; i < data.length; i++) {
+		    		if(data[i].field == "category") {
+		    			categoryId = data[i].id;
+		    			break;
+		    		}
+		    	}
+				$('#categoryId option[value=' + categoryId + ']').attr('selected','selected');
+				
+				subcategories();
+				var subcategoryId;
+				for(i = 0; i < data.length; i++) {
+		    		if(data[i].field == "subcategory") {
+		    			subcategoryId = data[i].id;
+		    			break;
+		    		}
+		    	}
+				$('#subcategoryId option[value=' + subcategoryId + ']').attr('selected','selected');
+			}
+		});
+    }
+    
+    function subcategories(){	
+		var subNames = [[${subNames}]];
+		var subIds = [[${subIds}]];
+		
+		var selectCategory = document.getElementById("categoryId");
+		var selectSubcategory = document.getElementById("subcategoryId");
+		var category = selectCategory.options[selectCategory.selectedIndex].value;
+		
+		removeOptions(selectSubcategory);
+		
+		for(var key in subNames[category]){
+			selectSubcategory.options[selectSubcategory.options.length] = new Option(subNames[category][key], subIds[category][key]);
+		}
+	}
+	
+	function removeOptions(selectbox){
+	    var i;
+	    for(i=selectbox.options.length-1;i>=0;i--)
+	    {
+	        selectbox.remove(i);
+	    }
+	}
+	/*]]>*/
+	</script>
+</body>
+</html>

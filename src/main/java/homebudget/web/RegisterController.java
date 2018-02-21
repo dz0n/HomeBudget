@@ -16,7 +16,7 @@ import homebudget.service.UserService;
 @Controller
 @RequestMapping(value="/register")
 public class RegisterController {
-	private UserService userService;
+	private final UserService userService;
 	
 	@Autowired
 	public RegisterController(UserService userService) {

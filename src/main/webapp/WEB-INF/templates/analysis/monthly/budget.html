@@ -89,8 +89,14 @@
         
         data.addRows(dataArray);
         
-		var options = {'title':'Saldo wpływów i wydatków',
+		var options = {'title':'wartość budżetu',
 						'titlePosition': 'none',
+						'vAxis': {
+							'viewWindow': {
+					        	min:0
+					    	}
+						},
+						'colors': ['#0d0d0d'],
 						'chartArea': {'width': '90%', 'height': '85%'},
 						'bar': {groupWidth: '80%'},
 						'legend': { position: 'none' },

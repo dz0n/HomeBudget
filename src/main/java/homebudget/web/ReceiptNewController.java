@@ -137,10 +137,12 @@ public class ReceiptNewController {
 		receipt = fillReceiptWithFormValues(receipt, receiptForm);
 		receiptService.save(receipt);
 		
-		BigDecimal sumInCurrentMonth = budgetCalculationService.getMonthBalance(budget);
+		BigDecimal balanceInCurrentMonth = budgetCalculationService.getMonthBalance(budget);
+		BigDecimal expensesInCurrentMonth = budgetCalculationService.getMonthBalance(budget);
 		NumberFormat numberFormat = getNumberFormat();
 		redirectAttributes.addFlashAttribute("msgSuccess", "Wydatek/wpływ dodany. "
-				+ "Saldo wpływów i wydatków w bieżącym miesiącu wynosi " + numberFormat.format(sumInCurrentMonth) + " zł.");
+				+ "Bieżący miesiąc: saldo wpływów i wydatków: " + numberFormat.format(balanceInCurrentMonth) + " zł, "
+				+ "suma wydatków: " + numberFormat.format(expensesInCurrentMonth) + " zł.");
 		return "redirect:/receipt";
 	}
 	

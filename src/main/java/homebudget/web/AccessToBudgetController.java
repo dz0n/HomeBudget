@@ -20,7 +20,6 @@ import homebudget.domain.Budget;
 import homebudget.domain.forms.AccessForm;
 import homebudget.service.AccessToBudgetService;
 import homebudget.service.BudgetService;
-import homebudget.service.IdHider;
 
 @Controller
 @RequestMapping("/budget/access")
@@ -31,15 +30,11 @@ public class AccessToBudgetController {
 	@Autowired
 	private BudgetService budgetService;
 	
-	@Autowired
-	private IdHider idHider;
-	
 	@RequestMapping(value="/new/{budgetId}", method=POST)
 	public String addAccessLevel(@Valid AccessForm accessForm, Errors errors,
 			Model model, @PathVariable String budgetId,
 			final RedirectAttributes redirectAttributes) {
-		Budget budget = budgetService.getBudgetById(idHider.getId(Budget.class, budgetId));
-		budget = setHashid(budget);
+		Budget budget = budgetService.getBudgetByHiddenId(budgetId);
 		model.addAttribute("budget", budget);
 		
 		if(errors.hasErrors()) {
@@ -58,8 +53,7 @@ public class AccessToBudgetController {
 	
 	@RequestMapping(value="/edit/{budgetId}/{username}", method=GET)
 	public String showEditForm(@PathVariable String budgetId, @PathVariable String username, Model model) {
-		Budget budget = budgetService.getBudgetById(idHider.getId(Budget.class, budgetId));
-		budget = setHashid(budget);
+		Budget budget = budgetService.getBudgetByHiddenId(budgetId);
 		model.addAttribute("budget", budget);
 		
 		AccessLevel accessLevel = accessToBudgetService.getAccessLevel(budget, username);
@@ -72,7 +66,7 @@ public class AccessToBudgetController {
 	public String updateAccessLevel(@RequestParam AccessLevel accessLevel,
 			@PathVariable String budgetId, @PathVariable String username,
 			final RedirectAttributes redirectAttributes) {
-		Budget budget = budgetService.getBudgetById(idHider.getId(Budget.class, budgetId));
+		Budget budget = budgetService.getBudgetByHiddenId(budgetId);
 		accessToBudgetService.addAccessToBudget(budget, username, accessLevel);
 		
 		redirectAttributes.addFlashAttribute("msgSuccess", "Zaktualizowano poziom dostępu.");
@@ -82,15 +76,10 @@ public class AccessToBudgetController {
 	@RequestMapping(value="/delete/{budgetId}/{username}", method=GET)
 	public String removeAccessLevel(@PathVariable String budgetId, @PathVariable String username,
 			final RedirectAttributes redirectAttributes) {
-		Budget budget = budgetService.getBudgetById(idHider.getId(Budget.class, budgetId));
+		Budget budget = budgetService.getBudgetByHiddenId(budgetId);
 		accessToBudgetService.removeAccessToBudget(budget, username);
 		
 		redirectAttributes.addFlashAttribute("msgSuccess", "Usunięto dostęp.");
 		return "redirect:/budget/edit/" + budgetId;
-	}
-	
-	private Budget setHashid(Budget budget) {
-		budget.setHiddenId(idHider.getHiddenId(Budget.class, budget.getId()));
-		return budget;
 	}
 }
